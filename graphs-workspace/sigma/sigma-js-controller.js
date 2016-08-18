@@ -6,22 +6,22 @@ angular.module('sigmajs-ng')
         {
           "id": "n0",
           "label": "A node",
-          "x": 0,
-          "y": 0,
+          // "x": 0,
+          // "y": 0,
           "size": 3
         },
         {
           "id": "n1",
           "label": "Another node",
-          "x": 3,
-          "y": 1,
+          // "x": 3,
+          // "y": 1,
           "size": 2
         },
         {
           "id": "n2",
           "label": "And a last one",
-          "x": 1,
-          "y": 3,
+          // "x": 1,
+          // "y": 3,
           "size": 1
         }
       ],
