@@ -1,0 +1,60 @@
+{
+	"name": "Stefan",
+	"size": 50,
+	"children": [
+		{
+			"name": "Bjarki",
+			"children": [
+				{
+					"name": "Adrien",
+					"children": [
+						{
+							"name": "Theo",
+							"size": 4
+						},
+						{
+							"name": "Guy",
+							"size": 4
+						},
+						{
+							"name": "Ali",
+							"size": 4
+						}
+					],
+					"size":14
+				},
+				{
+					"name": "Kieran",
+					"size": 4
+				},
+				{
+					"name": "Scott",
+					"size": 4
+				},
+				{
+					"name": "Stewart",
+					"size": 4
+				}
+			],
+			"size": 14
+		},
+		{
+			"name": "Neil",
+			"children": [
+				{
+					"name":"John",
+					"size": 4
+				},
+				{
+					"name": "Krijin",
+					"size": 4
+				},
+				{
+					"name": "Sally",
+					"size": 4
+				}
+			],
+			"size": 14
+		}
+	]
+}

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>Sigma Example</title>
+
+    <script src="sigma.js"></script>
+    <script src="sigma.plugins.relativeSize.js"></script>
+    <script src="angular.js"></script>
+    <script src="sigma-js-angular-app.js"></script>
+    <script src="sigma-js-controller.js"></script>
+</head>
+
+<body ng-app="sigmajs-ng">
+    <div ng-controller="MyCtrl">
+        <div>
+            <h1>Nodes <button ng-click="addNode()">Add Node</button></h1>
+            <ul>
+                <li ng-repeat="node in sigmaGraph.nodes">
+                    <label>id</label>
+                    <input ng-model="node.id"/>
+                    <label>label</label>
+                    <input ng-model="node.label"/>
+                    <label>x</label>
+                    <input ng-model="node.x"/>
+                    <label>y</label>
+                    <input ng-model="node.y"/>
+                    <label>size</label>
+                    <input ng-model="node.size">
+                </li>
+            </ul>
+            <h1>Edges <button ng-click="addEdge()">Add Edge</button></h1>
+            <ul>
+                <li ng-repeat="edge in sigmaGraph.edges">
+                    <input ng-model="edge.id"/>
+                    <select ng-model="edge.source">
+                        <option value="{{node.id}}" ng-repeat="node in sigmaGraph.nodes">{{node.id}}</option>
+                    </select>
+                    <select ng-model="edge.target">
+                        <option value="{{node.id}}" ng-repeat="node in sigmaGraph.nodes">{{node.id}}</option>
+                    </select>
+                </li>
+            </ul>
+        </div>
+
+        <sigmajs graph="sigmaGraph" width="100%" height="500px" releative-size-node="false"></sigmajs>
+    </div>
+</body>
+
+</html>
