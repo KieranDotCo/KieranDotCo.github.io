@@ -47,7 +47,7 @@ angular.module('sigmajs-ng')
     $scope.addNode = function () {
       var node = {
         "id": "n" + ($scope.sigmaGraph.nodes.length),
-        "label": "Node" + $scope.sigmaGraph.nodes.length,
+        "label": "Node" + ($scope.sigmaGraph.nodes.length + 1),
         "x": $scope.sigmaGraph.nodes.length,
         "y": $scope.sigmaGraph.nodes.length,
         "size": $scope.sigmaGraph.nodes.length
