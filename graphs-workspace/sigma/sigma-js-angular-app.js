@@ -102,6 +102,10 @@
 				});
 
 				scope.$watch('graph', function (newVal, oldVal) {
+					angular.forEach(scope.graph.nodes,function(node){
+						node.originalColor = node.color;
+					});
+
 					s.graph.clear();
 					s.graph.read(scope.graph);
 					s.refresh();

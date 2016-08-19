@@ -8,7 +8,8 @@ angular.module('sigmajs-ng')
           "label": "A node",
           "x": 0,
           "y": 0,
-          "size": 3
+          "size": 3,
+          "color":"#FF69B4"
         },
         {
           "id": "n1",
