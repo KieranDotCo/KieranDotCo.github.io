@@ -120,6 +120,7 @@ section.resume-section .resume-item .resume-date {
   }
   section.resume-section .resume-item .resume-date {
     min-width: 18rem;
+    max-width: 18rem;
   }
 }
 
