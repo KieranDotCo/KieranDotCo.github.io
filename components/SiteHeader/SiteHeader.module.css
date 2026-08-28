@@ -160,3 +160,9 @@
     color: var(--text);
   }
 }
+
+@media print {
+  .header {
+    display: none;
+  }
+}

@@ -124,3 +124,29 @@
     width: 176px;
   }
 }
+
+/* A page is ~794px wide, so the max-width: 900px rules above apply when
+   printing. Everything they set has to be undone here explicitly. */
+@media print {
+  .hero {
+    display: block;
+    padding: 0 0 1rem;
+    text-align: left;
+  }
+  .heroText {
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  .intro {
+    max-width: none;
+    margin-inline: 0;
+  }
+  /* Omitted on paper: it costs ink, and floating it either intrudes into the
+     next section or pushes it onto a second sheet. */
+  .portrait {
+    display: none;
+  }
+  .links {
+    display: none;
+  }
+}
