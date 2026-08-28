@@ -1,0 +1,152 @@
+---
+title: "Two dencoders: the same tool in Angular and React"
+date: "2026-08-28"
+excerpt: "I built the same URL encoder twice, eighteen months apart, to learn two frameworks. The interesting part is where each one wanted the logic to live."
+---
+
+I encode and decode URLs constantly at work, and for years the tool I reached for
+was [Eric Meyer's dencoder](https://meyerweb.com/eric/tools/dencoder/). It does
+one thing, it does it instantly, and it has outlived most of what I was building
+at the time.
+
+I also wanted to learn Angular, and later React, properly rather than by reading.
+A tool that small is the right size for that — big enough to hit real decisions,
+small enough to actually finish. So I built it twice.
+
+## The actual problem is one line
+
+Both versions do the same work, and the platform already does it:
+
+```js
+encodeURIComponent(value);
+decodeURIComponent(value);
+```
+
+Everything else is framework. Which turns out to be the point.
+
+## Angular 6, June 2018
+
+Angular's answer to "transform a value for display" is a pipe, so that is where
+the logic went:
+
+```ts title="src/app/pipes/encode.pipe.ts"
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({
+  name: 'encode'
+})
+export class EncodePipe implements PipeTransform {
+
+  transform(url: any): any {
+    if (!url) {
+      return '';
+    }
+
+    return encodeURIComponent(url);
+  }
+
+}
+```
+
+The template then reads `value | encode`, and the same for `decode`. Two pipes,
+each a class, each with a generated spec file beside it, all declared in
+`app.module.ts`.
+
+Copy-to-clipboard became a directive, because that is where a DOM side effect
+belongs in Angular:
+
+```ts title="src/app/copy-text.directive.ts"
+@Directive({
+  selector: '[copyText]'
+})
+export class CopyTextDirective {
+  @Input('copyText') text: string;
+
+  @HostListener('click') copyText() {
+    const textArea = document.createElement("textarea");
+    // ...position it off-screen, select it, document.execCommand('copy')
+  }
+}
+```
+
+That hidden-textarea trick dates it more than the framework version does. The
+async clipboard API existed but was not something I would have relied on in 2018.
+
+## React 16.12, November 2019
+
+Eighteen months later, the same tool. React has no pipe concept, so the transform
+happens in the component body, during render:
+
+```jsx title="src/components/UrlEncoder/UrlEncoder.js"
+export default function UrlEncoder(props) {
+  let encodeValue;
+  const encodeError = "Please enter valid text to be encoded.";
+
+  try {
+    encodeValue = encodeURIComponent(props.value);
+  } catch (e) {
+    encodeValue = encodeError;
+  }
+
+  return (
+    <div>
+      {encodeValue === encodeError ? (
+        <div className="alert alert-danger" role="alert">{encodeError}</div>
+      ) : (
+        <pre className="encode-value">{encodeValue}</pre>
+      )}
+    </div>
+  );
+}
+```
+
+`UrlEncoder` and `UrlDecoder` are components rather than plain functions because
+they own their error state as well as the transform. `App.js` holds the input
+value and the active tab, and passes it down.
+
+## Where each framework wanted the logic
+
+| | Angular | React |
+| --- | --- | --- |
+| The transform | a pipe | a function call in a component body |
+| Copy to clipboard | a directive | an event handler |
+| Registration | declared in a module | an import |
+| Files for ten lines of logic | 6 | 3 |
+
+Neither is better at this scale. What building it twice taught me is where to
+look — Angular spreads a feature across named seams, React collapses it until you
+choose to split it. That is a much clearer lesson from two versions of a tool I
+understood completely than it would have been from one real project I did not.
+
+## A bug I found writing this post
+
+The React components wrap the call in a `try`/`catch`. The Angular pipes only
+guard empty input:
+
+```ts
+if (!url) {
+  return '';
+}
+
+return decodeURIComponent(url);
+```
+
+`decodeURIComponent` throws on a malformed sequence — a lone percent sign is
+enough:
+
+```text
+URIError: URI malformed
+```
+
+So the Angular version breaks on input the React version handles. It has been
+that way since 2018, which tells you how much I have used my own tool versus
+Eric's.
+
+One more period detail: the React app is a class component with
+`this.handleChange.bind(this)` in the constructor, nine months after hooks
+shipped in 16.8. An accurate snapshot of what I knew at the time.
+
+## Source
+
+- Angular — [live](https://kieran.co/dencoder/) · [source](https://github.com/KieranDotCo/dencoder)
+- React — [live](https://kieran.co/react-dencoder/) · [source](https://github.com/KieranDotCo/react-dencoder)
