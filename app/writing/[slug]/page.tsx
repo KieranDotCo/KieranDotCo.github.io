@@ -1,3 +1,4 @@
+import type { ImgHTMLAttributes } from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -8,6 +9,21 @@ import { formatDate, getPost, getPosts } from "@/lib/posts";
 import styles from "./post.module.css";
 
 type Params = { slug: string };
+
+/**
+ * Markdown images carry no dimensions, so they cannot reserve layout space.
+ * Lazy loading at least keeps them off the critical path; pass width and height
+ * in the mdx as plain HTML when you know them, and the shift goes away.
+ *
+ * next/image is no help here — images: { unoptimized: true } is required for the
+ * static export, so it would add markup without adding optimisation.
+ */
+const mdxComponents = {
+  img: (props: ImgHTMLAttributes<HTMLImageElement>) => (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img {...props} alt={props.alt ?? ""} loading="lazy" decoding="async" />
+  ),
+};
 
 // output: "export" needs every route enumerated at build time.
 export function generateStaticParams(): Params[] {
@@ -59,7 +75,7 @@ export default async function PostPage({ params }: { params: Promise<Params> }) 
       </header>
 
       <Prose>
-        <MDXRemote source={post.body} options={{ mdxOptions }} />
+        <MDXRemote source={post.body} options={{ mdxOptions }} components={mdxComponents} />
       </Prose>
     </article>
   );
