@@ -45,7 +45,7 @@ app/
   layout.tsx            root shell, fonts, metadata
   globals.css           tokens (light + dark) and base styles
   not-found.tsx
-  opengraph-image.png   social card, plus .alt.txt
+  og.png/               generated site-wide social card
   icon.svg              favicon
   (home)/               route group, still served at "/"
     page.tsx            section composition
@@ -59,7 +59,6 @@ lib/                    useTheme, posts (reads content/), mdx (plugins),
                         commands (the palette's table)
 data/                   cv.ts, projects.ts — all site copy lives here
 public/                 profile photo, company logos, CV pdf, CNAME
-tools/og-card.tsx       source for the social card, not built
 ```
 
 Content is data-driven: roles, projects and profile copy come from `data/`,
@@ -83,7 +82,8 @@ blocks are highlighted at build time and follow the site theme; add
 ` ```ts title="next.config.ts" ` for a filename header.
 
 A social card carrying the post title is generated at build from
-`app/writing/[slug]/og.png/route.tsx` — nothing to do per post.
+`app/writing/[slug]/og.png/route.tsx` — nothing to do per post. The site-wide
+card comes from `app/og.png/route.tsx` and reads its text from `data/cv.ts`.
 
 ## Theming
 
@@ -112,7 +112,3 @@ Three pieces make the export work on Pages, all already in place:
 - `public/.nojekyll` — stops Jekyll hiding `_next/`
 - `public/CNAME` — the custom domain
 
-To change the social card, copy `tools/og-card.tsx` to
-`app/opengraph-image.tsx`, run `yarn build`, replace
-`app/opengraph-image.png` with `out/opengraph-image`, then delete the route
-file again.
