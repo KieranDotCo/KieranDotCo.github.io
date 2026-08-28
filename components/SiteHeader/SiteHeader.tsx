@@ -24,6 +24,7 @@ export function SiteHeader({ posts }: { posts: PostLink[] }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [active, setActive] = useState<string>("about");
   const pathname = usePathname();
+  const onHome = pathname === "/";
   const headerRef = useRef<HTMLElement>(null);
   const burgerRef = useRef<HTMLButtonElement>(null);
 
@@ -92,7 +93,7 @@ export function SiteHeader({ posts }: { posts: PostLink[] }) {
               key={s.id}
               href={`/#${s.id}`}
               className={styles.link}
-              aria-current={active === s.id ? "true" : undefined}
+              aria-current={onHome && active === s.id ? "true" : undefined}
             >
               {s.label}
             </Link>
@@ -161,7 +162,7 @@ export function SiteHeader({ posts }: { posts: PostLink[] }) {
               key={s.id}
               href={`/#${s.id}`}
               className={styles.menuLink}
-              aria-current={active === s.id ? "true" : undefined}
+              aria-current={onHome && active === s.id ? "true" : undefined}
               onClick={() => setMenuOpen(false)}
             >
               {s.label}
