@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { Prose } from "@/components/Prose";
+import { PostSchema } from "@/components/StructuredData";
 import { mdxOptions } from "@/lib/mdx";
 import { formatDate, getPost, getPosts } from "@/lib/posts";
 import styles from "./post.module.css";
@@ -44,6 +45,13 @@ export default async function PostPage({ params }: { params: Promise<Params> }) 
 
   return (
     <article className={styles.shell}>
+      <PostSchema
+        title={post.title}
+        description={post.excerpt}
+        date={post.date}
+        slug={post.slug}
+      />
+
       <Link href="/writing" className={styles.back}>
         ← All writing
       </Link>
