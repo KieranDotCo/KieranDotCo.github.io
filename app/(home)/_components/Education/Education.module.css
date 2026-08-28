@@ -1,0 +1,18 @@
+.card {
+  padding: 1.5rem;
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--step-2);
+  font-weight: 600;
+}
+
+.award {
+  margin: 0.625rem 0;
+  font-size: 0.875rem;
+  color: var(--muted);
+}

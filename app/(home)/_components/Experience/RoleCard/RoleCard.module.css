@@ -1,0 +1,111 @@
+.card {
+  padding: 1.5rem;
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  transition: border-color 0.15s ease;
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+.card:hover {
+  border-color: var(--accent);
+}
+
+.logo {
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background-color: #fff;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+.logo img {
+  /* Fill the tile edge to edge: logos with their own background (e.g. the blue
+     Lucidworks mark) must not sit inside a padded ring. */
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Marks on a white or transparent field (Typeset, SciBite, NHC) read better
+   inset, so the tile's background forms a small border around them.
+   Two classes keeps this ahead of .logo img regardless of source order. */
+.logo.inset img {
+  object-fit: contain;
+  padding: 6px;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  min-width: 0;
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.title {
+  margin: 0 0 0.3125rem;
+  font-size: var(--step-2);
+  font-weight: 600;
+}
+
+.company {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--accent);
+}
+
+.dates {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--faint);
+  white-space: nowrap;
+}
+
+.summary {
+  margin: 0;
+  max-width: 62em;
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+.bullets {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.bullets li {
+  display: grid;
+  grid-template-columns: 16px 1fr;
+  gap: 0.625rem;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+.bullets li span:first-child {
+  font-family: var(--font-mono);
+  color: var(--accent);
+}
+
+@media (max-width: 900px) {
+  .card {
+    grid-template-columns: 1fr;
+  }
+  .head {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}

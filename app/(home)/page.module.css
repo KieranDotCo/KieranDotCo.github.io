@@ -1,0 +1,5 @@
+.shell {
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <style>
+    /* Mirrors .dot in SiteHeader: the accent token, 30% corner radius
+       (3px on a 10px square). Hex fallback first, then the exact oklch. */
+    rect {
+      fill: #007072;
+      fill: oklch(0.48 0.115 195);
+    }
+    @media (prefers-color-scheme: dark) {
+      rect {
+        fill: #29BBBB;
+        fill: oklch(0.72 0.115 195);
+      }
+    }
+  </style>
+  <rect width="32" height="32" rx="9.6" />
+</svg>

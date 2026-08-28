@@ -1,1 +1,21 @@
-node_modules
+# dependencies
+node_modules/
+
+# yarn 4 (node-modules linker) — commit only the parts that belong in git
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+.pnp.*
+
+# next build output
+.next/
+out/
+tsconfig.tsbuildinfo
+
+# misc
+.DS_Store
+*.log
+.env*.local

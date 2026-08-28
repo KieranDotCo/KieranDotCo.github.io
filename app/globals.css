@@ -1,0 +1,164 @@
+/* ---------------------------------------------------------------------------
+   Design tokens. One set of names, two themes.
+   Theme resolution: html[data-theme="light" | "dark" | "system"].
+   "system" defers to prefers-color-scheme, which is also the no-JS default.
+   --------------------------------------------------------------------------- */
+
+:root {
+  --font-sans: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, "SFMono-Regular", monospace;
+
+  --step--1: 0.8125rem;
+  --step-0: 0.9375rem;
+  --step-1: 1.1875rem;
+  --step-2: 1.3125rem;
+  --step-3: 2rem;
+  --display: clamp(3.25rem, 8vw, 6.5rem);
+
+  --gutter: 3rem;
+  --measure: 1180px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-pill: 999px;
+
+  /* Hue is the only knob you need to turn. */
+  --accent-h: 195;
+  --accent-c: 0.115;
+
+  --bg: oklch(0.95 0.005 250);
+  --surface: oklch(1 0 0);
+  --surface-alt: oklch(0.972 0.004 250);
+  --nav-bg: oklch(0.97 0.004 250 / 0.82);
+  --text: oklch(0.2 0.02 260);
+  --muted: oklch(0.42 0.02 260);
+  --faint: oklch(0.55 0.02 260);
+  --border: oklch(0.88 0.008 250);
+  --hover: oklch(0.925 0.008 250);
+  --scrim: oklch(0.2 0.02 260 / 0.32);
+  --shadow: 0 24px 60px oklch(0.2 0.02 260 / 0.22);
+  --stripe: repeating-linear-gradient(135deg, oklch(0.93 0.006 250) 0 6px, oklch(0.965 0.004 250) 6px 12px);
+
+  /* L is set per theme so the accent clears AA on that theme's surfaces:
+     0.48 against white/near-white here, 0.72 against the dark surfaces below. */
+  --accent: oklch(0.48 var(--accent-c) var(--accent-h));
+  --accent-soft: oklch(0.48 var(--accent-c) var(--accent-h) / 0.1);
+  --on-accent: #ffffff;
+  --ring: var(--accent);
+}
+
+/* Explicit dark. The system path below repeats the values so that no-JS visitors
+   still get the right theme; keep the two blocks in sync. */
+html[data-theme="dark"] {
+  --bg: oklch(0.19 0.015 260);
+  --surface: oklch(0.232 0.015 260);
+  --surface-alt: oklch(0.212 0.015 260);
+  --nav-bg: oklch(0.19 0.015 260 / 0.82);
+  --text: oklch(0.95 0.005 250);
+  --muted: oklch(0.75 0.012 260);
+  --faint: oklch(0.62 0.012 260);
+  --border: oklch(0.31 0.015 260);
+  --hover: oklch(0.27 0.015 260);
+  --scrim: oklch(0.12 0.015 260 / 0.58);
+  --shadow: 0 24px 60px oklch(0.08 0.01 260 / 0.6);
+  --stripe: repeating-linear-gradient(135deg, oklch(0.26 0.015 260) 0 6px, oklch(0.225 0.015 260) 6px 12px);
+
+  --accent: oklch(0.72 var(--accent-c) var(--accent-h));
+  --accent-soft: oklch(0.72 var(--accent-c) var(--accent-h) / 0.16);
+  --on-accent: oklch(0.17 0.015 260);
+}
+
+@media (prefers-color-scheme: dark) {
+  html[data-theme="system"],
+  html:not([data-theme]) {
+    --bg: oklch(0.19 0.015 260);
+    --surface: oklch(0.232 0.015 260);
+    --surface-alt: oklch(0.212 0.015 260);
+    --nav-bg: oklch(0.19 0.015 260 / 0.82);
+    --text: oklch(0.95 0.005 250);
+    --muted: oklch(0.75 0.012 260);
+    --faint: oklch(0.62 0.012 260);
+    --border: oklch(0.31 0.015 260);
+    --hover: oklch(0.27 0.015 260);
+    --scrim: oklch(0.12 0.015 260 / 0.58);
+    --shadow: 0 24px 60px oklch(0.08 0.01 260 / 0.6);
+    --stripe: repeating-linear-gradient(135deg, oklch(0.26 0.015 260) 0 6px, oklch(0.225 0.015 260) 6px 12px);
+    --accent: oklch(0.72 var(--accent-c) var(--accent-h));
+    --accent-soft: oklch(0.72 var(--accent-c) var(--accent-h) / 0.16);
+    --on-accent: oklch(0.17 0.015 260);
+  }
+}
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+/* One gutter for the whole page. This has to be on :root, not .shell: the
+   header renders outside .shell, and custom properties only inherit down, so
+   a .shell-scoped override makes the nav and the content indent differently. */
+@media (max-width: 900px) {
+  :root {
+    --gutter: 1.25rem;
+  }
+}
+
+html { color-scheme: light dark; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: var(--step-0);
+  -webkit-font-smoothing: antialiased;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+a { color: inherit; text-decoration: none; }
+a:hover { color: var(--accent); }
+
+/* Focus is never removed. */
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+::selection { background: var(--accent-soft); }
+
+h1, h2, h3 { letter-spacing: -0.03em; text-wrap: balance; }
+p { text-wrap: pretty; }
+
+.mono { font-family: var(--font-mono); }
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.skipLink {
+  position: absolute;
+  left: -9999px;
+}
+.skipLink:focus {
+  left: 1rem;
+  top: 1rem;
+  z-index: 100;
+  padding: 0.6rem 1rem;
+  background: var(--surface);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-sm);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

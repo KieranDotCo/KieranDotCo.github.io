@@ -1,0 +1,57 @@
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4375rem;
+  padding: 1.125rem;
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  transition: border-color 0.15s ease;
+}
+.card:hover {
+  border-color: var(--accent);
+  color: inherit;
+}
+
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.name {
+  font-size: var(--step-1);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+/* Stretch the project link over the whole card so it stays one big target,
+   while leaving later siblings (the repo link) clickable above it. */
+.name::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.tag {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: var(--accent);
+}
+
+.blurb {
+  font-size: var(--step--1);
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.repo {
+  /* Sits above .name::after, and only as wide as its own text. */
+  position: relative;
+  z-index: 1;
+  align-self: flex-start;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: var(--faint);
+}

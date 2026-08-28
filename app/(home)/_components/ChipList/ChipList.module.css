@@ -1,0 +1,24 @@
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chip,
+.chipAccent {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  padding: 0.25rem 0.5625rem;
+  border-radius: var(--radius-pill);
+}
+.chipAccent {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.chip {
+  background: var(--hover);
+  color: var(--muted);
+}
