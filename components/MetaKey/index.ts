@@ -1,2 +1,3 @@
-export { MetaKey, useMetaKey, formatShortcut, expandShortcut } from "./MetaKey";
-export type { MetaKeyLabel } from "./MetaKey";
+export { MetaKey, useMetaKey } from "./MetaKey";
+export { detectMetaKey, expandShortcut, formatShortcut } from "./detect";
+export type { MetaKeyLabel, PlatformSignals } from "./detect";
