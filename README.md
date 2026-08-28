@@ -82,6 +82,9 @@ The filename becomes the slug. Reading time is derived from the body. Fenced cod
 blocks are highlighted at build time and follow the site theme; add
 ` ```ts title="next.config.ts" ` for a filename header.
 
+A social card carrying the post title is generated at build from
+`app/writing/[slug]/og.png/route.tsx` — nothing to do per post.
+
 ## Theming
 
 Three values of `html[data-theme]`: `light`, `dark`, or `system` (the default,

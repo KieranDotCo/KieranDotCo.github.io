@@ -6,6 +6,7 @@ import styles from "./writing.module.css";
 export const metadata: Metadata = {
   title: "Writing",
   description: "Notes on front-end engineering, search interfaces and side projects.",
+  alternates: { canonical: "/writing/" },
 };
 
 export default function WritingIndex() {

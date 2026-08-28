@@ -21,14 +21,18 @@ export async function generateMetadata(
   const post = getPost(slug);
   if (!post) return {};
 
+  const card = `/writing/${post.slug}/og.png`;
+
   return {
     title: post.title,
     description: post.excerpt,
+    alternates: { canonical: `/writing/${post.slug}/` },
     openGraph: {
       type: "article",
       title: post.title,
       description: post.excerpt,
       publishedTime: post.date,
+      images: [{ url: card, width: 1200, height: 630, alt: post.title }],
     },
   };
 }
