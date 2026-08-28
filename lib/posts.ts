@@ -20,9 +20,9 @@ function readingTime(body: string): string {
   return `${Math.max(1, Math.round(words / WORDS_PER_MINUTE))} min read`;
 }
 
-function parse(file: string): Post {
+/** Pure so it can be tested without touching the filesystem. */
+export function parsePost(file: string, raw: string): Post {
   const slug = file.replace(/\.mdx$/, "");
-  const raw = fs.readFileSync(path.join(DIR, file), "utf8");
   const { data, content } = matter(raw);
 
   for (const field of ["title", "date", "excerpt"] as const) {
@@ -47,7 +47,7 @@ export function getPosts(): Post[] {
   return fs
     .readdirSync(DIR)
     .filter((f) => f.endsWith(".mdx"))
-    .map(parse)
+    .map((file) => parsePost(file, fs.readFileSync(path.join(DIR, file), "utf8")))
     .sort((a, b) => b.date.localeCompare(a.date));
 }
 

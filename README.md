@@ -34,6 +34,7 @@ yarn dev --port 1337
 | `yarn build` | Static export to `out/` |
 | `yarn lint` | ESLint (flat config, `eslint-config-next`) |
 | `yarn typecheck` | `tsc --noEmit` |
+| `yarn test` | Vitest unit tests |
 
 There is no `start` script: `next start` needs a server and this is a static
 export. To preview a build, serve `out/` with anything, e.g. `npx serve out`.
