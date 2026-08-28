@@ -40,8 +40,8 @@ export function Hero() {
         <Image
           src="/img/profile.jpg"
           alt="Kieran Whiteman"
-          width={800}
-          height={800}
+          width={560}
+          height={560}
           sizes="(max-width: 900px) 176px, 200px"
           priority
           className={styles.portraitImg}
