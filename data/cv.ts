@@ -39,8 +39,24 @@ export const roles: Role[] = [
     dates: "January 2020 — July 2023",
     summary:
       "SciBite is an award-winning semantic software company offering an ontology-led approach to transforming unstructured content into machine-readable clean data. Supporting the top 20 pharma with use cases across life sciences, SciBite empowers customers with a suite of fast, flexible, deployable API technologies, making it a critical component in scientific data-led strategies.",
-    bullets: [],
-    stack: ["React", "Redux", "Web Components", "TypeScript"],
+    bullets: [
+      "Led the front-end build of SciBite Search, the replacement for an ageing AngularJS product, which resolves medical terms across synonyms so heart attack and myocardial infarction match the same concept.",
+      "Led the redesign of TERMite, the named entity recognition engine SciBite was founded on, moving it from jQuery to React on the same patterns and shared code as SciBite Search.",
+      "Moved ageing brownfield products onto a greenfield stack of React, Redux, Recoil, Material-UI, Jest and Storybook.",
+      "Designed and built the interfaces for our Keycloak authentication system — log-in, account management and the admin console.",
+      "Built and maintained the shared packages both products draw on, aligning look, feel and design patterns across SciBite.",
+    ],
+    stack: [
+      "React",
+      "Redux",
+      "Recoil",
+      "Material-UI",
+      "Web Components",
+      "TypeScript",
+      "Jest",
+      "Storybook",
+      "Keycloak",
+    ],
   },
   {
     title: "Senior Software Engineer",
