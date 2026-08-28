@@ -1,5 +1,4 @@
 .prose {
-  max-width: 68ch;
   font-size: var(--step-0);
   line-height: 1.7;
   color: var(--text);
@@ -88,6 +87,12 @@
   border-radius: 5px;
   background: var(--hover);
   color: var(--text);
+}
+
+/* rehype-pretty-code wraps fences in a <figure>, which carries the UA's
+   default 40px inline margin and pushes code out of line with the text. */
+.prose :global(figure) {
+  margin: 0;
 }
 
 .prose :global(pre) {

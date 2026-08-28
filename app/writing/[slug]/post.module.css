@@ -16,7 +16,6 @@
 }
 
 .head {
-  max-width: 68ch;
   margin-bottom: 2.5rem;
   padding-bottom: 2rem;
   border-bottom: 1px solid var(--border);
