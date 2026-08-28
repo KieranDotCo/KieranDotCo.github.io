@@ -1,10 +1,11 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
-import { CommandPalette } from "../CommandPalette";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { PostLink } from "@/lib/commands";
+import { useTheme } from "@/lib/useTheme";
 import { MetaKey } from "../MetaKey";
 import { ThemeToggle } from "../ThemeToggle";
 import styles from "./SiteHeader.module.css";
@@ -19,6 +20,17 @@ const sections = [
 /** Matches the breakpoint where .link/.search reappear in the stylesheet. */
 const WIDE = "(min-width: 901px)";
 
+/**
+ * The palette pulls in Radix Dialog and the whole command table, which most
+ * visitors never open. It loads on the first ⌘K or click instead of shipping in
+ * the initial bundle, which is why the shortcut listener lives here rather than
+ * inside the component it opens.
+ */
+const CommandPalette = dynamic(
+  () => import("../CommandPalette").then((m) => m.CommandPalette),
+  { ssr: false }
+);
+
 /** Sticky header height, so the decision line sits below it. */
 const HEADER_OFFSET = 72;
 
@@ -27,6 +39,32 @@ export function SiteHeader({ posts }: { posts: PostLink[] }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [active, setActive] = useState<string>("about");
   const pathname = usePathname();
+  const [paletteLoaded, setPaletteLoaded] = useState(false);
+  const { toggle } = useTheme();
+
+  const openPalette = useCallback(() => {
+    setPaletteLoaded(true);
+    setOpen(true);
+  }, []);
+
+  // Global shortcuts. Kept out of the palette so it can stay unloaded until use.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (!e.metaKey && !e.ctrlKey) return;
+      const key = e.key.toLowerCase();
+      if (key === "k") {
+        e.preventDefault();
+        setPaletteLoaded(true);
+        setOpen((v) => !v);
+      }
+      if (key === "j") {
+        e.preventDefault();
+        toggle();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [toggle]);
   const onHome = pathname === "/";
   const headerRef = useRef<HTMLElement>(null);
   const burgerRef = useRef<HTMLButtonElement>(null);
@@ -140,7 +178,7 @@ export function SiteHeader({ posts }: { posts: PostLink[] }) {
             Writing
           </Link>
 
-          <button type="button" className={styles.search} onClick={() => setOpen(true)}>
+          <button type="button" className={styles.search} onClick={openPalette}>
             <span>Search or jump…</span>
             <kbd className={styles.kbd}>
             <MetaKey keyName="K" />
@@ -217,7 +255,7 @@ export function SiteHeader({ posts }: { posts: PostLink[] }) {
           className={styles.menuSearch}
           onClick={() => {
             setMenuOpen(false);
-            setOpen(true);
+            openPalette();
           }}
         >
           <span>Search or jump…</span>
@@ -227,7 +265,9 @@ export function SiteHeader({ posts }: { posts: PostLink[] }) {
         </button>
       </div>
 
-      <CommandPalette open={open} onOpenChange={setOpen} posts={posts} />
+      {paletteLoaded ? (
+        <CommandPalette open={open} onOpenChange={setOpen} posts={posts} />
+      ) : null}
     </header>
   );
 }

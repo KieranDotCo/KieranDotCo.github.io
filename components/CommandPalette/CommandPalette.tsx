@@ -66,22 +66,6 @@ export function CommandPalette({ open, onOpenChange, posts }: Props) {
   );
 
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      const key = e.key.toLowerCase();
-      if ((e.metaKey || e.ctrlKey) && key === "k") {
-        e.preventDefault();
-        onOpenChange(!open);
-      }
-      if ((e.metaKey || e.ctrlKey) && key === "j") {
-        e.preventDefault();
-        toggle();
-      }
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [onOpenChange, open, toggle]);
-
-  useEffect(() => {
     if (open) {
       setQuery("");
       setSelected(0);
