@@ -8,3 +8,9 @@
   font-size: 0.75rem;
   color: var(--faint);
 }
+
+@media print {
+  .footer span:last-child {
+    display: none;
+  }
+}

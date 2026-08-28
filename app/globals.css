@@ -103,6 +103,57 @@ html[data-theme="dark"] {
 
 html { color-scheme: light dark; }
 
+/* ---------------------------------------------------------------------------
+   Print. A CV gets printed, so paper is a real target: force the light palette
+   regardless of theme, drop the interactive furniture, and spell out link
+   destinations that a reader cannot click.
+   --------------------------------------------------------------------------- */
+@media print {
+  :root,
+  html[data-theme="dark"],
+  html[data-theme="light"],
+  html[data-theme="system"] {
+    --bg: #fff;
+    --surface: #fff;
+    --surface-alt: #fff;
+    --text: #000;
+    --muted: #1a1a1a;
+    --faint: #555;
+    --border: #bbb;
+    --accent: #00595c;
+    --accent-soft: transparent;
+    --hover: transparent;
+    --stripe: none;
+    --nav-bg: #fff;
+    /* clamp(3.25rem, 8vw, 6.5rem) is viewport-relative, and a page is narrow. */
+    --display: 2.75rem;
+  }
+
+  @page {
+    margin: 14mm;
+  }
+
+  html {
+    color-scheme: light;
+  }
+
+  body {
+    background: #fff;
+  }
+
+  /* Anything that only exists to be clicked or typed into. */
+  .skipLink,
+  kbd {
+    display: none !important;
+  }
+
+  h1,
+  h2,
+  h3 {
+    break-after: avoid;
+  }
+}
+
 body {
   margin: 0;
   background: var(--bg);

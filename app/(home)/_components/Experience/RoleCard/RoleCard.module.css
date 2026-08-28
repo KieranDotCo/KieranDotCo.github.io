@@ -109,3 +109,18 @@
     gap: 0.5rem;
   }
 }
+
+@media print {
+  /* These cards run to most of a page. Keeping them whole pushes one that will
+     not fit onto the next sheet and leaves half a page blank, so let them split
+     and only protect the heading from being orphaned. */
+  .card {
+    break-inside: auto;
+    border-color: var(--border);
+  }
+  .head,
+  .title,
+  .company {
+    break-after: avoid;
+  }
+}

@@ -55,3 +55,9 @@
   font-size: 0.6875rem;
   color: var(--faint);
 }
+
+@media print {
+  .card {
+    break-inside: avoid;
+  }
+}
