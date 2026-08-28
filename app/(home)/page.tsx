@@ -3,6 +3,7 @@ import { Experience } from "./_components/Experience";
 import { Projects } from "./_components/Projects";
 import { Education } from "./_components/Education";
 import type { Metadata } from "next";
+import { PersonSchema } from "@/components/StructuredData";
 import { HomeFooter } from "./_components/HomeFooter";
 import styles from "./page.module.css";
 
@@ -15,6 +16,8 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <div className={styles.shell} id="top">
+      <PersonSchema />
+
       <Hero />
       <Experience />
       <Projects />
