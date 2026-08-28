@@ -6,16 +6,13 @@ export type ThemeMode = "light" | "dark" | "system";
 
 const KEY = "kieran-theme";
 
-/**
- * One store for the whole app, rather than per-hook useState.
- *
- * Every useTheme() call used to own its own copy of `mode`, so a change made
- * through one consumer (⌘J in the command palette) updated the DOM but left
- * every other consumer (the header's ThemeToggle) showing stale state.
- */
-
 type Snapshot = { mode: ThemeMode; resolved: "light" | "dark" };
 
+/**
+ * One store for the whole app. With per-hook useState, a change made through one
+ * consumer (⌘J in the palette) updated the DOM but left every other consumer
+ * (the header's ThemeToggle) showing stale state.
+ */
 let mode: ThemeMode = "system";
 let systemDark = false;
 let started = false;
@@ -25,8 +22,8 @@ let started = false;
 // would re-render forever.
 let snapshot: Snapshot = { mode: "system", resolved: "light" };
 
-// Server and hydration both need a stable, JS-free-safe value. ThemeScript has
-// already set data-theme before paint, so nothing flashes while we catch up.
+// ThemeScript has already set data-theme before paint, so nothing flashes while
+// hydration catches up to this placeholder.
 const serverSnapshot: Snapshot = { mode: "system", resolved: "light" };
 
 const listeners = new Set<() => void>();
@@ -38,7 +35,6 @@ function publish() {
   listeners.forEach((l) => l());
 }
 
-/** Runs once, on the first subscription — i.e. in an effect, never in render. */
 function start() {
   if (started || typeof window === "undefined") return;
   started = true;
@@ -57,7 +53,6 @@ function start() {
     publish();
   });
 
-  // Another tab changed the preference.
   window.addEventListener("storage", (e) => {
     if (e.key !== KEY) return;
     mode = e.newValue === "light" || e.newValue === "dark" ? e.newValue : "system";
