@@ -118,9 +118,12 @@ export type ProfileLinkIcon = "github" | "linkedin" | "flickr";
 
 export type ProfileLink = {
   label: string;
-  href: string;
+  /** Omitted for the email entry, whose address is assembled client-side. */
+  href?: string;
   primary?: boolean;
   icon?: ProfileLinkIcon;
+  /** Rendered by components/EmailLink so the address stays out of the HTML. */
+  email?: boolean;
 };
 
 export const profile = {
@@ -133,6 +136,7 @@ export const profile = {
     "Software engineer with experience across multiple disciplines, from full stack to purely front-end using technologies such as AngularJS, Angular 2+, Web Components, React, Redux, Recoil, Jasmine, Jest, C# and Java.",
   links: [
     { label: "CV ↓", href: "/assets/Kieran-Whiteman-CV-Web.pdf", primary: true },
+    { label: "Email", email: true },
     { label: "GitHub", href: "https://www.github.com/KieranDotCo", icon: "github" },
     { label: "LinkedIn", href: "https://www.linkedin.com/in/kieran-whiteman-1b577328/", icon: "linkedin" },
     { label: "Flickr", href: "https://www.flickr.com/photos/kierandotco/", icon: "flickr" },
