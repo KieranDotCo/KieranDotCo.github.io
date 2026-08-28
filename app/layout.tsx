@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, IBM_Plex_Mono } from "next/font/google";
 import { SiteHeader } from "@/components/SiteHeader";
+import { getPosts } from "@/lib/posts";
 import { ThemeScript } from "@/components/ThemeScript";
 import "./globals.css";
 
@@ -33,6 +34,13 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  // Only what the palette needs — this crosses into the client bundle.
+  const postLinks = getPosts().map(({ slug, title, excerpt }) => ({
+    slug,
+    title,
+    excerpt,
+  }));
+
   return (
     // data-theme is set to the stored preference by ThemeScript before paint;
     // "system" is the honest default and works with JS disabled.
@@ -50,7 +58,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <a className="skipLink" href="#main">Skip to content</a>
-        <SiteHeader />
+        <SiteHeader posts={postLinks} />
         <main id="main">{children}</main>
       </body>
     </html>

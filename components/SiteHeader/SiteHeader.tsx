@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { CommandPalette } from "../CommandPalette";
+import type { PostLink } from "@/lib/commands";
 import { MetaKey } from "../MetaKey";
 import { ThemeToggle } from "../ThemeToggle";
 import styles from "./SiteHeader.module.css";
@@ -17,33 +19,68 @@ const sections = [
 /** Matches the breakpoint where .link/.search reappear in the stylesheet. */
 const WIDE = "(min-width: 901px)";
 
-export function SiteHeader() {
+/** Sticky header height, so the decision line sits below it. */
+const HEADER_OFFSET = 72;
+
+export function SiteHeader({ posts }: { posts: PostLink[] }) {
   const [open, setOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [active, setActive] = useState<string>("about");
+  const pathname = usePathname();
+  const onHome = pathname === "/";
   const headerRef = useRef<HTMLElement>(null);
   const burgerRef = useRef<HTMLButtonElement>(null);
 
-  // Highlight the section in view. IntersectionObserver keeps this off the
-  // scroll thread; rootMargin accounts for the sticky header height.
+  // Highlight the section in view.
+  //
+  // This used to be an IntersectionObserver picking the highest
+  // intersectionRatio, which is unsound when sections differ wildly in height:
+  // Experience is ~2400px and can never exceed a ratio of about 0.17, while
+  // Education is ~310px. Education also sits close enough to the bottom that
+  // the page runs out of scroll before it could ever win, so it never
+  // highlighted at all. A single decision line is height-independent.
   useEffect(() => {
-    const targets = sections
-      .map((s) => document.getElementById(s.id))
-      .filter((el): el is HTMLElement => Boolean(el));
-    if (!targets.length) return;
+    if (!onHome) return;
 
-    const io = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-        if (visible) setActive(visible.target.id);
-      },
-      { rootMargin: "-72px 0px -55% 0px", threshold: [0.1, 0.5, 1] }
-    );
-    targets.forEach((t) => io.observe(t));
-    return () => io.disconnect();
-  }, []);
+    const ids = sections.map((s) => s.id);
+    let frame = 0;
+
+    const pick = () => {
+      frame = 0;
+      const line = HEADER_OFFSET + window.innerHeight * 0.25;
+
+      let current = "";
+      for (const id of ids) {
+        const el = document.getElementById(id);
+        if (el && el.getBoundingClientRect().top <= line) current = id;
+      }
+
+      // The final section is usually too short to reach the line, so once the
+      // page is scrolled to the end it takes precedence.
+      const atBottom =
+        window.scrollY + window.innerHeight >=
+        document.documentElement.scrollHeight - 4;
+      if (atBottom) {
+        const last = ids.filter((id) => document.getElementById(id)).pop();
+        if (last) current = last;
+      }
+
+      if (current) setActive(current);
+    };
+
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(pick);
+    };
+
+    pick();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (frame) cancelAnimationFrame(frame);
+    };
+  }, [onHome]);
 
   // Growing past the breakpoint reveals the full nav, so a menu left open
   // would linger as dead state (and reappear on the way back down).
@@ -89,11 +126,19 @@ export function SiteHeader() {
               key={s.id}
               href={`/#${s.id}`}
               className={styles.link}
-              aria-current={active === s.id ? "true" : undefined}
+              aria-current={onHome && active === s.id ? "true" : undefined}
             >
               {s.label}
             </Link>
           ))}
+
+          <Link
+            href="/writing"
+            className={styles.link}
+            aria-current={pathname.startsWith("/writing") ? "page" : undefined}
+          >
+            Writing
+          </Link>
 
           <button type="button" className={styles.search} onClick={() => setOpen(true)}>
             <span>Search or jump…</span>
@@ -150,12 +195,21 @@ export function SiteHeader() {
               key={s.id}
               href={`/#${s.id}`}
               className={styles.menuLink}
-              aria-current={active === s.id ? "true" : undefined}
+              aria-current={onHome && active === s.id ? "true" : undefined}
               onClick={() => setMenuOpen(false)}
             >
               {s.label}
             </Link>
           ))}
+
+          <Link
+            href="/writing"
+            className={styles.menuLink}
+            aria-current={pathname.startsWith("/writing") ? "page" : undefined}
+            onClick={() => setMenuOpen(false)}
+          >
+            Writing
+          </Link>
         </nav>
 
         <button
@@ -173,7 +227,7 @@ export function SiteHeader() {
         </button>
       </div>
 
-      <CommandPalette open={open} onOpenChange={setOpen} />
+      <CommandPalette open={open} onOpenChange={setOpen} posts={posts} />
     </header>
   );
 }

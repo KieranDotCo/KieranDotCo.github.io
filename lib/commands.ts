@@ -1,8 +1,12 @@
 import { projects } from "@/data/projects";
 
+/** Post metadata handed in from a server component — lib/posts.ts reads the
+ *  filesystem, so it cannot be imported into the client bundle. */
+export type PostLink = { slug: string; title: string; excerpt: string };
+
 export type Command = {
   id: string;
-  group: "Go to" | "Project" | "Action" | "Link";
+  group: "Go to" | "Writing" | "Project" | "Action" | "Link";
   label: string;
   hint?: string;
   keywords?: string;
@@ -11,6 +15,7 @@ export type Command = {
 
 export type CommandContext = {
   jump: (id: string) => void;
+  navigate: (href: string) => void;
   openExternal: (href: string) => void;
   toggleTheme: () => void;
   setSystemTheme: () => void;
@@ -18,7 +23,7 @@ export type CommandContext = {
 
 const sections = ["about", "experience", "education", "projects"] as const;
 
-export function buildCommands(): Command[] {
+export function buildCommands(posts: PostLink[] = []): Command[] {
   return [
     ...sections.map<Command>((id) => ({
       id: `go-${id}`,
@@ -26,6 +31,14 @@ export function buildCommands(): Command[] {
       label: id[0].toUpperCase() + id.slice(1),
       hint: "↵",
       run: (c) => c.jump(id),
+    })),
+    ...posts.map<Command>((p) => ({
+      id: `post-${p.slug}`,
+      group: "Writing",
+      label: p.title,
+      hint: "↵",
+      keywords: p.excerpt,
+      run: (c) => c.navigate(`/writing/${p.slug}`),
     })),
     ...projects.map<Command>((p) => ({
       id: `project-${p.name}`,
