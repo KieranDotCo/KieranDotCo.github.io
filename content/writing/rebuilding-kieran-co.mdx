@@ -1,0 +1,65 @@
+---
+title: "Rebuilding kieran.co as a static Next.js export"
+date: "2026-08-28"
+excerpt: "Why the whole site is a pile of HTML in a GitHub Pages bucket, and the two things that silently break when you get there."
+---
+
+The old site was Bootstrap, jQuery and a `gulpfile.js`. The new one is Next.js 15
+on the App Router, exported to static files and served from GitHub Pages. No
+server, no runtime, no cold starts — just a directory of HTML.
+
+Getting there took one config change and two traps.
+
+## The config
+
+```ts title="next.config.ts"
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
+  output: "export",
+  images: { unoptimized: true },
+  reactStrictMode: true,
+};
+
+export default nextConfig;
+```
+
+## Trap one: images fail silently
+
+`output: "export"` alone builds green. It also emits markup pointing at the
+Next image optimizer:
+
+```html
+<img src="/_next/image?url=%2Fimg%2Fprofile.jpg&w=3840&q=75" />
+```
+
+That endpoint is a server route. On a static host it 404s, so every optimized
+image is broken — and nothing in the build warns you. `images: { unoptimized: true }`
+is what turns those back into plain file paths.
+
+## Trap two: Jekyll eats your JavaScript
+
+GitHub Pages runs Jekyll by default, and Jekyll ignores paths beginning with an
+underscore. Next writes everything into `_next/`:
+
+```bash
+out/
+├── _next/static/chunks/...   # invisible to Jekyll
+├── index.html
+└── 404.html
+```
+
+An empty `public/.nojekyll` fixes it. Without it you get styled-free HTML and a
+console full of 404s.
+
+## Where it landed
+
+| Thing | Before | After |
+| --- | --- | --- |
+| Build | gulp | `next build` |
+| Deploy | branch | GitHub Actions |
+| Payload | jQuery + Bootstrap | 109 kB first load |
+
+![The site's own social card](/opengraph-image.png)
+
+The full source is in [the repo](https://github.com/KieranDotCo/KieranDotCo.github.io).

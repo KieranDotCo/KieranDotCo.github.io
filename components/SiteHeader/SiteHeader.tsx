@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { CommandPalette } from "../CommandPalette";
+import type { PostLink } from "@/lib/commands";
 import { MetaKey } from "../MetaKey";
 import { ThemeToggle } from "../ThemeToggle";
 import styles from "./SiteHeader.module.css";
@@ -17,10 +19,11 @@ const sections = [
 /** Matches the breakpoint where .link/.search reappear in the stylesheet. */
 const WIDE = "(min-width: 901px)";
 
-export function SiteHeader() {
+export function SiteHeader({ posts }: { posts: PostLink[] }) {
   const [open, setOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [active, setActive] = useState<string>("about");
+  const pathname = usePathname();
   const headerRef = useRef<HTMLElement>(null);
   const burgerRef = useRef<HTMLButtonElement>(null);
 
@@ -95,6 +98,14 @@ export function SiteHeader() {
             </Link>
           ))}
 
+          <Link
+            href="/writing"
+            className={styles.link}
+            aria-current={pathname.startsWith("/writing") ? "page" : undefined}
+          >
+            Writing
+          </Link>
+
           <button type="button" className={styles.search} onClick={() => setOpen(true)}>
             <span>Search or jump…</span>
             <kbd className={styles.kbd}>
@@ -156,6 +167,15 @@ export function SiteHeader() {
               {s.label}
             </Link>
           ))}
+
+          <Link
+            href="/writing"
+            className={styles.menuLink}
+            aria-current={pathname.startsWith("/writing") ? "page" : undefined}
+            onClick={() => setMenuOpen(false)}
+          >
+            Writing
+          </Link>
         </nav>
 
         <button
@@ -173,7 +193,7 @@ export function SiteHeader() {
         </button>
       </div>
 
-      <CommandPalette open={open} onOpenChange={setOpen} />
+      <CommandPalette open={open} onOpenChange={setOpen} posts={posts} />
     </header>
   );
 }

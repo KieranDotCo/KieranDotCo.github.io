@@ -9,6 +9,7 @@ Personal site and CV. Statically exported and served from GitHub Pages at
 - React 19, TypeScript
 - CSS Modules, with design tokens in `app/globals.css`
 - Radix Primitives — Dialog, Toggle Group, Visually Hidden
+- MDX posts, highlighted at build time by Shiki (`rehype-pretty-code`)
 - Space Grotesk + IBM Plex Mono via `next/font`
 - Yarn 4, Node 20
 
@@ -50,16 +51,36 @@ app/
     page.tsx            section composition
     _components/        Hero, Experience, Projects, Education, HomeFooter,
                         and the shared Section + ChipList
+  writing/              blog index and [slug] post pages
 components/             cross-route: SiteHeader, CommandPalette, ThemeToggle,
-                        ThemeScript, MetaKey
-lib/                    useTheme, commands (the palette's table)
+                        ThemeScript, MetaKey, Prose
+content/writing/        posts as .mdx with frontmatter
+lib/                    useTheme, posts (reads content/), mdx (plugins),
+                        commands (the palette's table)
 data/                   cv.ts, projects.ts — all site copy lives here
 public/                 profile photo, company logos, CV pdf, CNAME
 tools/og-card.tsx       source for the social card, not built
 ```
 
-Content is data-driven: roles, projects and profile copy come from `data/`, and
-the command palette builds itself from the same source.
+Content is data-driven: roles, projects and profile copy come from `data/`,
+posts from `content/writing/`, and the command palette builds itself from both.
+
+## Writing a post
+
+Drop a `.mdx` file in `content/writing/`. Frontmatter is required — the build
+fails on a missing field rather than rendering a blank:
+
+```yaml
+---
+title: "Post title"
+date: "2026-08-28"
+excerpt: "One line for the index and the social card."
+---
+```
+
+The filename becomes the slug. Reading time is derived from the body. Fenced code
+blocks are highlighted at build time and follow the site theme; add
+` ```ts title="next.config.ts" ` for a filename header.
 
 ## Theming
 

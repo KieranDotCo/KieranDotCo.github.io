@@ -4,14 +4,23 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { buildCommands, filterCommands, type CommandContext } from "@/lib/commands";
+import {
+  buildCommands,
+  filterCommands,
+  type CommandContext,
+  type PostLink,
+} from "@/lib/commands";
 import { useTheme } from "@/lib/useTheme";
 import { MetaKey, useMetaKey, expandShortcut } from "../MetaKey";
 import styles from "./CommandPalette.module.css";
 
-type Props = { open: boolean; onOpenChange: (open: boolean) => void };
+type Props = {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  posts: PostLink[];
+};
 
-export function CommandPalette({ open, onOpenChange }: Props) {
+export function CommandPalette({ open, onOpenChange, posts }: Props) {
   const router = useRouter();
   const { toggle, setTheme } = useTheme();
   const modifier = useMetaKey();
@@ -19,12 +28,16 @@ export function CommandPalette({ open, onOpenChange }: Props) {
   const [selected, setSelected] = useState(0);
   const listRef = useRef<HTMLDivElement>(null);
 
-  const all = useMemo(buildCommands, []);
+  const all = useMemo(() => buildCommands(posts), [posts]);
   const results = useMemo(() => filterCommands(all, query), [all, query]);
   const active = results[Math.min(selected, results.length - 1)];
 
   const ctx = useMemo<CommandContext>(
     () => ({
+      navigate: (href) => {
+        router.push(href);
+        onOpenChange(false);
+      },
       jump: (id) => {
         const el = document.getElementById(id);
         if (el) {
