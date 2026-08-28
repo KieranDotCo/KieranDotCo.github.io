@@ -33,9 +33,8 @@ yarn dev --port 1337
 | `yarn build` | Static export to `out/` |
 | `yarn typecheck` | `tsc --noEmit` |
 
-`yarn start` is unavailable — `next start` needs a server, and this project is a
-static export. To preview a build, serve `out/` with anything, e.g.
-`npx serve out`.
+There is no `start` script: `next start` needs a server and this is a static
+export. To preview a build, serve `out/` with anything, e.g. `npx serve out`.
 
 ## Structure
 
