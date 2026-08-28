@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { profile } from "@/data/cv";
+import { EmailLink } from "@/components/EmailLink";
 import { LinkIcon } from "./LinkIcon";
 import styles from "./Hero.module.css";
 
@@ -22,10 +23,14 @@ export function Hero() {
         <ul className={styles.links}>
           {profile.links.map((l) => (
             <li key={l.label}>
-              <a href={l.href} className={l.primary ? styles.pillPrimary : styles.pill}>
-                {l.icon ? <LinkIcon name={l.icon} className={styles.pillIcon} /> : null}
-                {l.label}
-              </a>
+              {l.email ? (
+                <EmailLink className={styles.pill} iconClassName={styles.pillIcon} />
+              ) : (
+                <a href={l.href} className={l.primary ? styles.pillPrimary : styles.pill}>
+                  {l.icon ? <LinkIcon name={l.icon} className={styles.pillIcon} /> : null}
+                  {l.label}
+                </a>
+              )}
             </li>
           ))}
         </ul>

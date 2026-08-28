@@ -50,6 +50,13 @@
 
 .pill,
 .pillPrimary {
+  /* .pill is also used on a <button>, which inherits none of these. Without
+     `color`, the UA paints button text per `color-scheme: light dark` on <html>,
+     which renders white-on-white when the OS is dark but the site is light. */
+  font: inherit;
+  color: inherit;
+  appearance: none;
+  cursor: pointer;
   display: inline-flex;
   align-items: center;
   gap: 0.4375rem;
