@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { CommandPalette } from "../CommandPalette";
 import { MetaKey } from "../MetaKey";
@@ -77,21 +78,21 @@ export function SiteHeader() {
   return (
     <header className={styles.header} ref={headerRef}>
       <div className={styles.bar}>
-        <a href="/#top" className={styles.brand}>
+        <Link href="/#top" className={styles.brand}>
           <span className={styles.dot} aria-hidden="true" />
           kieran.co
-        </a>
+        </Link>
 
         <nav className={styles.nav} aria-label="Sections">
           {sections.map((s) => (
-            <a
+            <Link
               key={s.id}
               href={`/#${s.id}`}
               className={styles.link}
               aria-current={active === s.id ? "true" : undefined}
             >
               {s.label}
-            </a>
+            </Link>
           ))}
 
           <button type="button" className={styles.search} onClick={() => setOpen(true)}>
@@ -145,7 +146,7 @@ export function SiteHeader() {
       <div id="mobile-nav" className={styles.menu} hidden={!menuOpen}>
         <nav className={styles.menuList} aria-label="Sections">
           {sections.map((s) => (
-            <a
+            <Link
               key={s.id}
               href={`/#${s.id}`}
               className={styles.menuLink}
@@ -153,7 +154,7 @@ export function SiteHeader() {
               onClick={() => setMenuOpen(false)}
             >
               {s.label}
-            </a>
+            </Link>
           ))}
         </nav>
 

@@ -31,6 +31,7 @@ yarn dev --port 1337
 | --- | --- |
 | `yarn dev` | Dev server |
 | `yarn build` | Static export to `out/` |
+| `yarn lint` | ESLint (flat config, `eslint-config-next`) |
 | `yarn typecheck` | `tsc --noEmit` |
 
 There is no `start` script: `next start` needs a server and this is a static
